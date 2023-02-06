@@ -1,2 +1,3 @@
-# tic-tac-toe
+# Tic-Tac-Toe
+
 Web game for The Odin Project
