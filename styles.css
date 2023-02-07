@@ -18,10 +18,27 @@ main {
   flex: 1;
 }
 
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 50px);
+  grid-template-rows: repeat(3, 50px);
+  gap: 5px 5px;
+  background-color: black;
+  width: fit-content;
+}
+
+.space {
+  background-color: white;
+  height: 100%;
+  width: 100%;
+  font-size: 30px;
+}
+
 /* Footer */
 
 footer {
-  height: 8vh;
+  height: 55px;
+  width: 100vw;
   display: flex;
   align-items: center;
   background-color: #0D1117;
