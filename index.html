@@ -12,26 +12,34 @@
 
 <body>
   <main>
-    <h1>Welcome to Tic-Tac-Toe!</h1>
-    <h2>Who would you like to play against?</h2>
-    <button>Another Player</button>
-    <button>Computer</button>
-    <div>
-      <h3>It's Player X's turn!</h3>
+    <h1>Tic-Tac-Toe</h1>
+    <div class="menu">
+      <h2>Play Against</h2>
+      <select name="difficulty">
+        <option value="easy">Computer - Easy</option>
+        <option value="medium">Computer - Medium</option>
+        <option value="hard">Computer - Hard</option>
+        <option value="unbeatable">Computer - Unbeatable</option>
+        <option value="friend">Another Friend</option>
+      </select>
+      <div class="container-play">
+        <button class="play" value="X" disabled>Play as X</button>
+        <button class="play" value="O">Play as O</button>
+      </div>
     </div>
+    <h3 class="turn"></h3>
     <div class="board">
-      <div class="space">X</div>
-      <div class="space">O</div>
-      <div class="space"></div>
-      <div class="space">X</div>
-      <div class="space">O</div>
-      <div class="space">O</div>
-      <div class="space"></div>
-      <div class="space"></div>
-      <div class="space">X</div>
+      <button class="tile" value="0"></button>
+      <button class="tile" value="1"></button>
+      <button class="tile" value="2"></button>
+      <button class="tile" value="3"></button>
+      <button class="tile" value="4"></button>
+      <button class="tile" value="5"></button>
+      <button class="tile" value="6"></button>
+      <button class="tile" value="7"></button>
+      <button class="tile" value="8"></button>
     </div>
-    <h3>Player O wins!</h3>
-    <button>Reset</button>
+    <button class="reset">Reset</button>
   </main>
 
   <footer>

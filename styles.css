@@ -18,20 +18,30 @@ main {
   flex: 1;
 }
 
-.board {
-  display: grid;
-  grid-template-columns: repeat(3, 50px);
-  grid-template-rows: repeat(3, 50px);
-  gap: 5px 5px;
-  background-color: black;
-  width: fit-content;
+.menu {
+  display: flex;
 }
 
-.space {
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(3, auto);
+  background-color: black;
+  width: fit-content;
+  text-align: center;
+  gap: 5px;
+}
+
+.tile {
   background-color: white;
-  height: 100%;
-  width: 100%;
+  width: 75px;
+  height: 75px;
   font-size: 30px;
+  line-height: 50px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Footer */
