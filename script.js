@@ -62,6 +62,7 @@ const displayController = (() => {
       playO.removeAttribute('disabled');
     }
     gameController.setComputerPlaysFirst(false);
+    gameController.setDifficulty(gamemode);
   }
 
   const changeMode = mode => {
@@ -135,6 +136,7 @@ const gameController = (() => {
   let computer = playerO;
   let computerPlaysFirst = false;
   let currentPlayer = human;
+  let difficulty = 25;
 
   const setGamemode = gm => {
     gamemode = gm;
@@ -164,6 +166,22 @@ const gameController = (() => {
     }
   }
 
+  const setDifficulty = gamemode => {
+    switch (gamemode) {
+      case 'easy':
+        difficulty = 25;
+        break;
+      case 'medium':
+        difficulty = 50;
+        break;
+      case 'hard':
+        difficulty = 75;
+        break;
+      case 'unbeatable':
+        difficulty = 100;
+    }
+  }
+
   const resetGame = () => {
     if (gamemode === 'friend') {
       currentPlayer = playerX;
@@ -172,7 +190,7 @@ const gameController = (() => {
         computer = playerX;
         human = playerO;
         currentPlayer = computer;
-        randomizeFirstMove();
+        makeComputerMove();
       } else {
         human = playerX;
         computer = playerO;
@@ -203,15 +221,20 @@ const gameController = (() => {
     );
   }
 
-  const randomizeFirstMove = () => {
-    let index = Math.floor(Math.random() * 9);
-    let tile = document.querySelector(`button[value="${index}"]`);
-    displayController.placeMark(tile);
-  }
-
   const makeComputerMove = () => {
-    let index = minmax(gameboard.getLayout(), getCurrentPlayerMark()).index;
-    let tile = document.querySelector(`button[value="${index}"]`);
+    let emptySpaces = getEmptySpaces(gameboard.getLayout());
+    if (emptySpaces.length === 9) {
+      let index = Math.floor(Math.random() * 9);
+      var tile = document.querySelector(`button[value="${index}"]`);  
+    } else {
+      if (Math.ceil(Math.random() * 100) > difficulty) {
+        let index = emptySpaces[Math.floor(Math.random() * emptySpaces.length)];
+        var tile = document.querySelector(`button[value="${index}"]`);    
+      } else {
+        let index = minmax(gameboard.getLayout(), getCurrentPlayerMark()).index;
+        var tile = document.querySelector(`button[value="${index}"]`);    
+      }
+    }
     displayController.placeMark(tile);
   }
 
@@ -273,6 +296,7 @@ const gameController = (() => {
     getCurrentPlayer,
     getCurrentPlayerMark,
     toggleCurrentPlayer,
+    setDifficulty,
     resetGame,
     getEmptySpaces,
     hasPlayerWon,
