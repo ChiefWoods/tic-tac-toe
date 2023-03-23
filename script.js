@@ -44,7 +44,12 @@ const displayController = (() => {
     resetGame();
   });
 
-  tiles.forEach(tile => tile.addEventListener('click', e => placeMark(e)))
+  plays.forEach(play => play.addEventListener('click', e => {
+    changeMode(e.target.value);
+    resetGame();
+  }));
+
+  tiles.forEach(tile => tile.addEventListener('click', e => placeMark(e.target)));
 
   reset.addEventListener('click', () => resetGame());
 
@@ -53,7 +58,21 @@ const displayController = (() => {
     if (gamemode === 'friend') {
       plays.forEach(play => play.setAttribute('disabled', ''));
     } else {
+      playX.setAttribute('disabled', '');
       playO.removeAttribute('disabled');
+    }
+    gameController.setComputerPlaysFirst(false);
+  }
+
+  const changeMode = mode => {
+    if (mode === 'X') {
+      playX.toggleAttribute('disabled');
+      playO.toggleAttribute('disabled');
+      gameController.setComputerPlaysFirst(false);
+    } else {
+      playO.toggleAttribute('disabled');
+      playX.toggleAttribute('disabled');
+      gameController.setComputerPlaysFirst(true);
     }
   }
 
@@ -62,17 +81,16 @@ const displayController = (() => {
       tile.textContent = '';
       tile.removeAttribute('disabled');
     });
-    gameController.resetGame();
     gameboard.resetLayout();
+    gameController.resetGame();
     updateTurn();
   }
 
-  const placeMark = e => {
-    e.target.setAttribute('disabled', '');
-    e.target.textContent = gameController.getCurrentPlayerMark();
-    let index = parseInt(e.target.value);
-    gameboard.setLayout(index, gameController.getCurrentPlayerMark());
-    if (gameController.hasPlayerWon(index)) {
+  const placeMark = tile => {
+    tile.setAttribute('disabled', '');
+    tile.textContent = gameController.getCurrentPlayerMark();
+    gameboard.setLayout(parseInt(tile.value), gameController.getCurrentPlayerMark());
+    if (gameController.hasPlayerWon(gameboard.getLayout(), gameController.getCurrentPlayerMark())) {
       declareWinner();
       disableBoard();
       return;
@@ -81,8 +99,13 @@ const displayController = (() => {
       disableBoard();
       return;
     }
-    gameController.incrementRound();
+    gameController.toggleCurrentPlayer();
     updateTurn();
+    if (gameController.getGamemode() !== 'friend') {
+      if (gameController.getCurrentPlayer() === 'computer') {
+        gameController.makeComputerMove();
+      }
+    }
   }
 
   const updateTurn = () => {
@@ -100,35 +123,69 @@ const displayController = (() => {
   const disableBoard = () => {
     tiles.forEach(tile => tile.setAttribute('disabled', ''));
   }
+
+  return { placeMark }
 })()
 
 const gameController = (() => {
-  let round = 1;
   let gamemode = 'easy';
   let playerX = Player('X');
   let playerO = Player('O');
-
-  const incrementRound = () => {
-    round++;
-  }
+  let human = playerX;
+  let computer = playerO;
+  let computerPlaysFirst = false;
+  let currentPlayer = human;
 
   const setGamemode = gm => {
     gamemode = gm;
   }
 
-  const resetGame = () => {
-    round = 1;
+  const getGamemode = () => {
+    return gamemode;
+  }
+
+  const setComputerPlaysFirst = value => {
+    computerPlaysFirst = value;
+  }
+
+  const getCurrentPlayer = () => {
+    return currentPlayer === human ? 'human' : 'computer';
   }
 
   const getCurrentPlayerMark = () => {
-    return round % 2 ? playerX.getMark() : playerO.getMark();
+    return currentPlayer.getMark();
+  }
+
+  const toggleCurrentPlayer = () => {
+    if (gamemode === 'friend') {
+      currentPlayer === playerX ? currentPlayer = playerO : currentPlayer = playerX;
+    } else {
+      currentPlayer === human ? currentPlayer = computer : currentPlayer = human;
+    }
+  }
+
+  const resetGame = () => {
+    if (gamemode === 'friend') {
+      currentPlayer = playerX;
+    } else {
+      if (computerPlaysFirst) {
+        computer = playerX;
+        human = playerO;
+        currentPlayer = computer;
+        randomizeFirstMove();
+      } else {
+        human = playerX;
+        computer = playerO;
+        currentPlayer = human;
+      }
+    }
   }
 
   const getEmptySpaces = layout => {
-    return layout.filter(space => space != 'X' && space != 'O');
+    return layout.filter(index => index != 'X' && index != 'O');
   }
 
-  const hasPlayerWon = (index) => {
+  const hasPlayerWon = (layout, mark) => {
     let winConditions = [
       [0, 1, 2],
       [3, 4, 5],
@@ -140,19 +197,85 @@ const gameController = (() => {
       [2, 4, 6],
     ];
 
-    return winConditions.filter(condition => condition
-      .includes(index))
-      .some(condition => condition
-        .every(position => gameboard.getMark(position) === gameController.getCurrentPlayerMark())
-      )
+    return winConditions.some(condition =>
+      condition.every(index =>
+        layout[index] === mark)
+    );
+  }
+
+  const randomizeFirstMove = () => {
+    let index = Math.floor(Math.random() * 9);
+    let tile = document.querySelector(`button[value="${index}"]`);
+    displayController.placeMark(tile);
+  }
+
+  const makeComputerMove = () => {
+    let index = minmax(gameboard.getLayout(), getCurrentPlayerMark()).index;
+    let tile = document.querySelector(`button[value="${index}"]`);
+    displayController.placeMark(tile);
+  }
+
+  const minmax = (layout, mark) => {
+    const emptySpaces = getEmptySpaces(layout);
+
+    if (hasPlayerWon(layout, human.getMark())) {
+      return { score: -10 };
+    } else if (hasPlayerWon(layout, computer.getMark())) {
+      return { score: 10 };
+    } else if (emptySpaces.length === 0) {
+      return { score: 0 };
+    }
+
+    const allMoves = [];
+
+    for (let i = 0; i < emptySpaces.length; i++) {
+      const currentMove = {};
+
+      currentMove.index = layout[emptySpaces[i]];
+      gameboard.setLayout(emptySpaces[i], mark);
+
+      if (mark === computer.getMark()) {
+        var result = minmax(gameboard.getLayout(), human.getMark());
+      } else {
+        var result = minmax(gameboard.getLayout(), computer.getMark());
+      }
+      currentMove.score = result.score;
+      gameboard.setLayout(emptySpaces[i], currentMove.index);
+      allMoves.push(currentMove);
+    }
+
+    let bestPlay = null;
+
+    if (mark === computer.getMark()) {
+      let bestScore = -Infinity;
+      for (let i = 0; i < allMoves.length; i++) {
+        if (allMoves[i].score > bestScore) {
+          bestScore = allMoves[i].score;
+          bestPlay = i;
+        }
+      }
+    } else {
+      let bestScore = Infinity;
+      for (let i = 0; i < allMoves.length; i++) {
+        if (allMoves[i].score < bestScore) {
+          bestScore = allMoves[i].score;
+          bestPlay = i;
+        }
+      }
+    }
+    return allMoves[bestPlay];
   }
 
   return {
-    incrementRound,
     setGamemode,
+    getGamemode,
+    setComputerPlaysFirst,
+    getCurrentPlayer,
+    getCurrentPlayerMark,
+    toggleCurrentPlayer,
     resetGame,
     getEmptySpaces,
     hasPlayerWon,
-    getCurrentPlayerMark
+    makeComputerMove
   }
 })()
