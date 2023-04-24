@@ -1,53 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tic-Tac-Toe</title>
-  <link rel="stylesheet" href="./styles.css">
-  <script src="./script.js" defer></script>
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./script.js" defer></script>
+  </head>
 
-<body>
-  <main>
-    <h1>Tic-Tac-Toe</h1>
-    <div class="menu">
-      <h2>Play Against</h2>
-      <select name="difficulty">
-        <option value="easy">Computer - Easy</option>
-        <option value="medium">Computer - Medium</option>
-        <option value="hard">Computer - Hard</option>
-        <option value="unbeatable">Computer - Unbeatable</option>
-        <option value="friend">Another Friend</option>
-      </select>
-      <div class="container-play">
-        <button class="play selected" value="X" disabled>Play as X</button>
-        <button class="play" value="O">Play as O</button>
+  <body>
+    <main>
+      <h1>Tic-Tac-Toe</h1>
+      <div class="menu">
+        <h2>Play Against</h2>
+        <select name="difficulty">
+          <option value="easy">Computer - Easy</option>
+          <option value="medium">Computer - Medium</option>
+          <option value="hard">Computer - Hard</option>
+          <option value="unbeatable">Computer - Unbeatable</option>
+          <option value="friend">Another Friend</option>
+        </select>
+        <div class="container-play">
+          <button class="play selected" value="X" disabled>Play as X</button>
+          <button class="play" value="O">Play as O</button>
+        </div>
       </div>
-    </div>
-    <h3 class="turn">It's X's turn!</h3>
-    <div class="board">
-      <button class="tile" value="0"></button>
-      <button class="tile" value="1"></button>
-      <button class="tile" value="2"></button>
-      <button class="tile" value="3"></button>
-      <button class="tile" value="4"></button>
-      <button class="tile" value="5"></button>
-      <button class="tile" value="6"></button>
-      <button class="tile" value="7"></button>
-      <button class="tile" value="8"></button>
-    </div>
-    <button class="reset">Reset</button>
-  </main>
-
-  <footer>
-    <span class="made-by">Made by ChiefWoods</span>
-    <a class="github-link" href="https://github.com/ChiefWoods/tic-tac-toe" target="_blank">
-      <img src="./icons/github.svg" class="github-icon" alt="GitHub icon">
-    </a>
-  </footer>
-</body>
+      <h3 class="turn">It's X's turn!</h3>
+      <div class="board">
+        <button class="tile" value="0"></button>
+        <button class="tile" value="1"></button>
+        <button class="tile" value="2"></button>
+        <button class="tile" value="3"></button>
+        <button class="tile" value="4"></button>
+        <button class="tile" value="5"></button>
+        <button class="tile" value="6"></button>
+        <button class="tile" value="7"></button>
+        <button class="tile" value="8"></button>
+      </div>
+      <button class="reset">Reset</button>
+    </main>
+    <footer>
+      <span class="made-by">Copyright @
+        <script>document.write(new Date().getFullYear())</script> ChiefWoods
+      </span>
+      <a class="github-link" href="https://github.com/ChiefWoods/tic-tac-toe" target="_blank">
+        <img src="./icons/github.svg" class="github-icon" alt="GitHub">
+      </a>
+    </footer>
+  </body>
 
 </html>
