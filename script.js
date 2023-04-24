@@ -1,5 +1,5 @@
 const gameboard = (() => {
-  var layout = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  let layout = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
   const getLayout = () => {
     return layout;
@@ -36,8 +36,9 @@ const displayController = (() => {
   const playX = document.querySelector('button[value="X"]');
   const playO = document.querySelector('button[value="O"]');
   const turn = document.querySelector('.turn');
+  const turnMark = document.querySelector('.container-turn>span');
   const tiles = document.querySelectorAll('.tile');
-  const reset = document.querySelector('.reset');
+  const restart = document.querySelector('.restart');
 
   select.addEventListener('change', e => {
     changeGamemode(e.target.value);
@@ -51,7 +52,7 @@ const displayController = (() => {
 
   tiles.forEach(tile => tile.addEventListener('click', e => placeMark(e.target)));
 
-  reset.addEventListener('click', () => resetGame());
+  restart.addEventListener('click', () => resetGame());
 
   const changeGamemode = gamemode => {
     gameController.setGamemode(gamemode);
@@ -81,6 +82,7 @@ const displayController = (() => {
     tiles.forEach(tile => {
       tile.textContent = '';
       tile.removeAttribute('disabled');
+      tile.className = 'tile';
     });
     gameboard.resetLayout();
     gameController.resetGame();
@@ -90,6 +92,11 @@ const displayController = (() => {
   const placeMark = tile => {
     tile.setAttribute('disabled', '');
     tile.textContent = gameController.getCurrentPlayerMark();
+    if (tile.textContent === 'X') {
+      tile.classList.add('mark-X');
+    } else {
+      tile.classList.add('mark-O');
+    }
     gameboard.setLayout(parseInt(tile.value), gameController.getCurrentPlayerMark());
     if (gameController.hasPlayerWon(gameboard.getLayout(), gameController.getCurrentPlayerMark())) {
       declareWinner();
@@ -109,16 +116,31 @@ const displayController = (() => {
     }
   }
 
+  const updateTurnMark = () => {
+    if (turnMark.textContent === 'X') {
+      turnMark.className = 'mark-X';
+    } else {
+      turnMark.className = 'mark-O';
+    }
+  }
+
   const updateTurn = () => {
-    turn.textContent = `It's ${gameController.getCurrentPlayerMark()}'s turn!`;
+    console.log(gameController.getCurrentPlayerMark());
+    turnMark.textContent = `${gameController.getCurrentPlayerMark()}`;
+    updateTurnMark();
+    turn.textContent = ' Turn';
   }
 
   const declareWinner = () => {
-    turn.textContent = `${gameController.getCurrentPlayerMark()} wins!`;
+    turnMark.textContent = '';
+    turnMark.textContent = `${gameController.getCurrentPlayerMark()}`;
+    updateTurnMark();
+    turn.textContent = ` wins!`;
   }
 
   const declareDraw = () => {
-    turn.textContent = `Draw! No one wins this round.`;
+    turnMark.textContent = '';
+    turn.textContent = 'Draw!';
   }
 
   const disableBoard = () => {
@@ -137,6 +159,16 @@ const gameController = (() => {
   let computerPlaysFirst = false;
   let currentPlayer = human;
   let difficulty = 25;
+  const winConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
 
   const setGamemode = gm => {
     gamemode = gm;
@@ -204,35 +236,21 @@ const gameController = (() => {
   }
 
   const hasPlayerWon = (layout, mark) => {
-    let winConditions = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-
-    return winConditions.some(condition =>
-      condition.every(index =>
-        layout[index] === mark)
-    );
+    return winConditions.some(condition => condition.every(index => layout[index] === mark));
   }
 
   const makeComputerMove = () => {
     let emptySpaces = getEmptySpaces(gameboard.getLayout());
     if (emptySpaces.length === 9) {
       let index = Math.floor(Math.random() * 9);
-      var tile = document.querySelector(`button[value="${index}"]`);  
+      var tile = document.querySelector(`button[value="${index}"]`);
     } else {
       if (Math.ceil(Math.random() * 100) > difficulty) {
         let index = emptySpaces[Math.floor(Math.random() * emptySpaces.length)];
-        var tile = document.querySelector(`button[value="${index}"]`);    
+        var tile = document.querySelector(`button[value="${index}"]`);
       } else {
         let index = minmax(gameboard.getLayout(), getCurrentPlayerMark()).index;
-        var tile = document.querySelector(`button[value="${index}"]`);    
+        var tile = document.querySelector(`button[value="${index}"]`);
       }
     }
     displayController.placeMark(tile);

@@ -1,3 +1,14 @@
+@font-face {
+  font-family: Kalam;
+  src: url(./fonts/Kalam/Kalam-Regular.ttf) format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Azeret Mono';
+  src: url(./fonts/Azeret_Mono/AzeretMono-VariableFont_wght.ttf);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,6 +18,10 @@
 html {
   font-size: 62.5%;
   --github-black: #0D1117;
+  --background-green: #14BDAC;
+  --grid-green: #0DA192;
+  --mark-white: #F2EBD3;
+  --mark-black: #545454;
 }
 
 body {
@@ -18,33 +33,151 @@ body {
 
 main {
   flex: 1;
+  background-color: var(--background-green);
+  padding: 50px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.title {
+  font-family: Kalam, cursive;
+  font-size: 5.8rem;
+  color: white;
 }
 
 .menu {
   display: flex;
+  gap: 15px;
+}
+
+[name='difficulty'] {
+  font-family: 'Azelet Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--grid-green);
+  letter-spacing: 0.1rem;
+  cursor: pointer;
+  border: 2px solid var(--grid-green);
+  border-radius: 5px;
+}
+
+.container-play {
+  display: flex;
+  gap: 8px;
+}
+
+.play {
+  font-family: Kalam, cursive;
+  font-size: 2.8rem;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+}
+
+.play.mark-X {
+  background-color: var(--mark-white);
+}
+
+.play.mark-O {
+  background-color: var(--mark-black);
+}
+
+.mark-X {
+  color: var(--mark-black);
+}
+
+.mark-O {
+  color: var(--mark-white);
+}
+
+.play:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.container-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.container-turn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 40px;
+}
+
+.container-turn > span {
+  font-family: Kalam, cursive;
+  font-size: 2.2rem;
+  font-weight: bold;
+}
+
+.turn {
+  font-family: 'Azelet Mono', monospace;
+  font-size: 1.8rem;
+  font-weight: normal;
+  text-align: center;
 }
 
 .board {
   display: grid;
   grid-template-columns: repeat(3, auto);
   grid-template-rows: repeat(3, auto);
-  background-color: black;
+  background-color: var(--grid-green);
   width: fit-content;
   text-align: center;
-  gap: 5px;
+  gap: 7px;
 }
 
 .tile {
-  background-color: white;
+  background-color: var(--background-green);
   width: 75px;
   height: 75px;
-  font-size: 50px;
-  color: black;
-  line-height: 50px;
+  font-family: Kalam, cursive;
+  font-size: 5rem;
   border: none;
   display: flex;
   justify-content: center;
-  align-items: center;
+  cursor: pointer;
+}
+
+.tile.mark-X, .tile.mark-O {
+  cursor: default;
+}
+
+.tile:disabled {
+  cursor: default;
+}
+
+.restart {
+  font-family: Kalam, cursive;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: white;
+  height: 42px;
+  width: 98px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  background-color: var(--background-green);
+  transition: background-color 0.25s;
+}
+
+.restart:hover {
+  color: var(--background-green);
+  background-color: white;
+}
+
+.restart:active {
+  background-color: rgb(210, 210, 210);
 }
 
 /* Footer */
