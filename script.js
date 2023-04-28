@@ -109,10 +109,8 @@ const displayController = (() => {
     }
     gameController.toggleCurrentPlayer();
     updateTurn();
-    if (gameController.getGamemode() !== 'friend') {
-      if (gameController.getCurrentPlayer() === 'computer') {
-        gameController.makeComputerMove();
-      }
+    if (gameController.getGamemode() !== 'friend' && gameController.getCurrentPlayer() === 'computer') {
+      gameController.makeComputerMove();
     }
   }
 
@@ -125,14 +123,12 @@ const displayController = (() => {
   }
 
   const updateTurn = () => {
-    console.log(gameController.getCurrentPlayerMark());
     turnMark.textContent = `${gameController.getCurrentPlayerMark()}`;
     updateTurnMark();
     turn.textContent = ' Turn';
   }
 
   const declareWinner = () => {
-    turnMark.textContent = '';
     turnMark.textContent = `${gameController.getCurrentPlayerMark()}`;
     updateTurnMark();
     turn.textContent = ` wins!`;
