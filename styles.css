@@ -9,26 +9,11 @@
   src: url(./fonts/Azeret_Mono/AzeretMono-VariableFont_wght.ttf);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  font-size: 62.5%;
-  --github-black: #0D1117;
+:root {
   --background-green: #14BDAC;
   --grid-green: #0DA192;
   --mark-white: #F2EBD3;
   --mark-black: #545454;
-}
-
-body {
-  display: inline-flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-width: calc(100vw - (100vw - 100%));
 }
 
 main {
@@ -178,24 +163,4 @@ main {
 
 .restart:active {
   background-color: rgb(210, 210, 210);
-}
-
-/* Footer */
-
-footer {
-  display: flex;
-  align-items: center;
-  background-color: var(--github-black);
-  padding: 12px 40px;
-}
-
-.made-by {
-  font-size: 12px;
-  font-family: cursive;
-  color: white;
-  margin: 0 auto;
-}
-
-.github-icon {
-  height: 25px;
 }
